@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <base href="https://primeblacklist.vercel.app"/>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Check User | Prime.ac</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+            }
+        }
+
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes bob {
+            0%, 100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+
+        .bob {
+            animation: bob 3s ease-in-out infinite;
+        }
+
+        .flicker {
+            animation: flicker 3s ease-in-out infinite;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-item {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .bg-pattern {
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            transform: translateY(-5px);
+        }
+
+        .icon-container {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* === Scrollbar styling === */
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: #0a0a0a;
+          border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #1E90FF, #00BFFF);
+          border-radius: 10px;
+          box-shadow: 0 0 10px #1E90FF;
+          transition: all 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, #339CFF, #1E90FF);
+          box-shadow: 0 0 20px #1E90FF;
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-x-hidden">
+    <!-- Animated Background Elements -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute top-10 left-10 w-4 h-4 bg-blue-500 rounded-full opacity-20 animate-pulse"></div>
+        <div class="absolute top-60 right-20 w-8 h-8 bg-blue-400 rounded-full opacity-10 animate-float"></div>
+        <div class="absolute bottom-40 left-1/4 w-6 h-6 bg-blue-600 rounded-full opacity-15 animate-bob"></div>
+        <div class="absolute top-1/3 right-1/3 w-3 h-3 bg-blue-300 rounded-full opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-5 h-5 bg-blue-500 rounded-full opacity-10 animate-float"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-zinc-800/50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <img alt="Prime Logo" class="h-12 w-auto hover:scale-105 transition-transform duration-300" src="/static/images/logo.png"/>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/">Home</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/features.html">Features</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/checkuser.html">Checkuser</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/Banned.html">Banned</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="https://prime.gitbook.io/prime-docs">Guide</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/contact.html">Contact</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="https://discord.com/invite/primeac">Discord</a>
+                </div>
+                <a class="inline-block" href="/login">
+                    <button class="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
+                        Login
+                    </button>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Check User Section -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center bg-black pt-24 pb-32 overflow-hidden">
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-20 left-20 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-blue-700/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+        </div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+        <div class="relative max-w-7xl mx-auto px-6 z-10 w-full">
+            <div class="text-center mb-14">
+                <div class="inline-flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-blue-500/10 via-blue-500/5 to-transparent border border-blue-500/20 rounded-full mb-6 backdrop-blur-xl">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-blue-500 rounded-full blur-md opacity-50 animate-pulse"></div>
+                        <span class="relative text-xl">🔍</span>
+                    </div>
+                    <span class="text-blue-500 text-xs font-bold tracking-wider">USER CHECK</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black mb-5 leading-tight">
+                    <span class="gradient-blue">Check User</span>
+                    <span class="gradient-lightblue ml-3">Status</span>
+                </h1>
+                <style>
+                    .gradient-blue {
+                        background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
+                        background-size: 200% 200%;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        animation: gradient-shift 3s ease infinite;
+                    }
+
+                    .gradient-lightblue {
+                        background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+                        background-size: 200% 200%;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        animation: gradient-shift 3s ease infinite;
+                    }
+
+                    @keyframes gradient-shift {
+                        0%, 100% { background-position: 0% 50%; }
+                        50% { background-position: 100% 50%; }
+                    }
+                </style>
+                <p class="text-base md:text-lg text-gray-300 mb-10 max-w-2xl mx-auto">
+                    Check if a user is in the blacklist database.
+                </p>
+            </div>
+            
+            <!-- Check User Form -->
+            <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-8 mb-12 max-w-2xl mx-auto">
+                <h2 class="text-2xl font-black text-white mb-6">Check User Status</h2>
+                <form id="check-user-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">User ID</label>
+                        <input type="text" id="user-id" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Discord User ID" required>
+                    </div>
+                    <div class="flex justify-center">
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
+                            Check User
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- User Status Result -->
+            <div id="user-result" class="hidden bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-8 max-w-3xl mx-auto">
+                <h2 class="text-2xl font-black text-white mb-6">User Status</h2>
+                <div id="result-content" class="text-center py-8">
+                    <!-- Result will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative bg-black border-t border-blue-500/10 py-16 z-10 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-72 h-72 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-10 right-10 w-72 h-72 bg-blue-700/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center space-y-6 md:space-y-0 md:space-x-8">
+                <div class="flex-shrink-0">
+                    <img src="/static/images/logo.png" alt="Prime.ac Logo" class="w-10 h-10">
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/changelogs">Changelogs</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/blog">Blog</a></li>
+                    </ul>
+                    
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/terms">Terms of Service</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/privacy">Privacy Policy</a></li>
+                    </ul>
+                    
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/contact">Contact</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/support">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-6 mt-6 border-t border-zinc-800 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-3">
+                    <a class="inline-flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-blue-500/10 to-transparent border border-blue-500/20 rounded-lg hover:border-blue-500/50 transition-all group" href="https://www.dmca.com/Protection/Status.aspx?ID=10e95297-9219-450a-a75d-c0f41cf75437&amp;refurl=https://www.prime.ac/" rel="noopener" target="_blank">
+                        <svg class="w-5 h-5 text-blue-500 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 11 5.16-1.261 9-5.45 9-11V7l-10-5z"/>
+                        </svg>
+                        <span class="text-sm font-medium text-blue-500">DMCA Protected</span>
+                    </a>
+                </div>
+                
+                <p class="text-xs text-gray-500 text-center md:text-right">
+                    &copy; 2023 - 2025 Prime.ac. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Handle form submission
+        document.getElementById('check-user-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('user-id').value;
+            
+            // Show loading state
+            const resultDiv = document.getElementById('user-result');
+            const resultContent = document.getElementById('result-content');
+            resultContent.innerHTML = '<div class="text-blue-500">Checking user status...</div>';
+            resultDiv.classList.remove('hidden');
+            
+            // Fetch user status
+            fetch(`/api/blacklist/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        // User found in blacklist
+                        const user = data.data;
+                        resultContent.innerHTML = `
+                            <div class="bg-red-900/30 border border-red-500/50 rounded-xl p-6">
+                                <div class="flex items-center justify-center mb-4">
+                                    <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <h3 class="text-2xl font-black text-red-500 mb-2">User Blacklisted</h3>
+                                <div class="text-left space-y-3 mt-6">
+                                    <div class="flex">
+                                        <span class="text-gray-400 w-32">Username:</span>
+                                        <span class="text-white">${user.username || 'N/A'}</span>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="text-gray-400 w-32">User ID:</span>
+                                        <span class="text-white">${user.id || 'N/A'}</span>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="text-gray-400 w-32">Reason:</span>
+                                        <span class="text-white">${user.reason || 'No reason provided'}</span>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="text-gray-400 w-32">Server:</span>
+                                        <span class="text-white">${user.server || 'Unknown'}</span>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="text-gray-400 w-32">Date:</span>
+                                        <span class="text-white">${user.date ? new Date(user.date).toLocaleString() : 'N/A'}</span>
+                                    </div>
+                                    ${user.expiresAt ? `
+                                    <div class="flex">
+                                        <span class="text-gray-400 w-32">Expires:</span>
+                                        <span class="text-white">${new Date(user.expiresAt).toLocaleString()}</span>
+                                    </div>
+                                    ` : ''}
+                                    <div class="flex">
+                                        <span class="text-gray-400 w-32">Added By:</span>
+                                        <span class="text-white">${user.addedBy || 'Unknown'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // User not found in blacklist
+                        resultContent.innerHTML = `
+                            <div class="bg-green-900/30 border border-green-500/50 rounded-xl p-6">
+                                <div class="flex items-center justify-center mb-4">
+                                    <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <h3 class="text-2xl font-black text-green-500 mb-2">User Not Blacklisted</h3>
+                                <p class="text-gray-300">This user is not in the blacklist database.</p>
+                                <div class="mt-4 text-sm text-gray-400">
+                                    User ID: ${userId}
+                                </div>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    resultContent.innerHTML = `
+                        <div class="bg-red-900/30 border border-red-500/50 rounded-xl p-6">
+                            <div class="flex items-center justify-center mb-4">
+                                <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-2xl font-black text-red-500 mb-2">Error</h3>
+                            <p class="text-gray-300">Failed to check user status: ${error.message}</p>
+                        </div>
+                    `;
+                });
+        });
+    </script>
+</body>
+</html>

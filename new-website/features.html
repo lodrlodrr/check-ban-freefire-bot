@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <base href="https://primeblacklist.vercel.app"/>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Features | Prime.ac</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(249, 115, 22, 0.8); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(249, 115, 22, 0.6);
+            }
+        }
+
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes bob {
+            0%, 100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+
+        .bob {
+            animation: bob 3s ease-in-out infinite;
+        }
+
+        .flicker {
+            animation: flicker 3s ease-in-out infinite;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(249, 115, 22, 0.3);
+        }
+
+        .nav-item {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b00, #ff9500);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .bg-pattern {
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.1) 0%, transparent 50%);
+        }
+
+        .pumpkin {
+            position: absolute;
+            font-size: 2rem;
+            animation: bob 4s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        .ghost {
+            position: absolute;
+            font-size: 2.5rem;
+            animation: float 5s ease-in-out infinite;
+            opacity: 0.5;
+        }
+
+        .bat {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: bob 3s ease-in-out infinite;
+            opacity: 0.4;
+        }
+
+        .spider {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.3;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            border-color: rgba(249, 115, 22, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            transform: translateY(-5px);
+        }
+
+        .icon-container {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(249, 115, 22, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* === Scrollbar styling === */
+        ::-webkit-scrollbar {
+          width: 8px; /* عرض الشريط */
+        }
+
+        /* خلفية المسار */
+        ::-webkit-scrollbar-track {
+          background: #0a0a0a; /* نفس خلفية الموقع */
+          border-radius: 10px;
+        }
+
+        /* مقبض الشريط */
+        ::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #1E90FF, #00BFFF); /* تدرج أزرق */
+          border-radius: 10px;
+          box-shadow: 0 0 10px #1E90FF;
+          transition: all 0.3s ease;
+        }
+
+        /* تأثير عند مرور الماوس */
+        ::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, #339CFF, #1E90FF);
+          box-shadow: 0 0 20px #1E90FF;
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-x-hidden">
+    <!-- Animated Background Elements -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="pumpkin" style="top: 10%; left: 5%; animation-delay: 0s;">🎃</div>
+        <div class="pumpkin" style="top: 60%; left: 90%; animation-delay: 1s;">🎃</div>
+        <div class="pumpkin" style="top: 85%; left: 10%; animation-delay: 2s;">🎃</div>
+        <div class="ghost" style="top: 20%; right: 10%; animation-delay: 0.5s;">👻</div>
+        <div class="ghost" style="top: 70%; right: 80%; animation-delay: 1.5s;">👻</div>
+        <div class="bat" style="top: 15%; left: 30%; animation-delay: 0.3s;">🦇</div>
+        <div class="bat" style="top: 50%; right: 25%; animation-delay: 1.2s;">🦇</div>
+        <div class="bat" style="top: 80%; left: 60%; animation-delay: 2.1s;">🦇</div>
+        <div class="spider" style="top: 5%; left: 50%; animation-delay: 0s;">🕷️</div>
+        <div class="spider" style="top: 40%; right: 15%; animation-delay: 1s;">🕷️</div>
+        <div class="spider" style="top: 90%; left: 75%; animation-delay: 1.8s;">🕷️</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-zinc-800/50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <img alt="Prime Logo" class="h-12 w-auto hover:scale-105 transition-transform duration-300" src="/images/logo.png"/>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/features.html">Features</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/checkuser.html">Checkuser</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/Banned.html">Banned</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="https://prime.gitbook.io/prime-docs">Guide</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/contact.html">Contact</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="https://discord.com/invite/primeac">Discord</a>
+                </div>
+                <a class="inline-block" href="/login.html">
+                    <button class="px-6 py-2 bg-gradient-to-r from-orange-600 to-orange-500 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300">
+                        Login
+                    </button>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Features Section -->
+    <section class="relative min-h-screen py-32 bg-black z-10 overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-20 left-20 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-red-500/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+        </div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(251,146,60,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(251,146,60,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-20">
+                <div class="inline-flex items-center space-x-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full mb-6 backdrop-blur-xl">
+                    <div class="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                    <span class="text-orange-500 text-xs font-bold tracking-wider">FEATURES</span>
+                </div>
+                <h1 class="text-5xl md:text-6xl font-black mb-6">
+                    Advanced <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-600">Anti-Cheat</span> Features
+                </h1>
+                <p class="text-lg text-gray-300 max-w-4xl mx-auto">
+                    Our cutting-edge anti-cheat technology provides comprehensive protection for your gaming community with multiple layers of detection and prevention.
+                </p>
+            </div>
+            
+            <!-- Feature Categories -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                <div class="group relative">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl opacity-0 group-hover:opacity-20 blur transition-all duration-500"></div>
+                    <div class="relative bg-black/80 backdrop-blur-xl border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-orange-500/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="relative">
+                            <div class="w-14 h-14 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl flex items-center justify-center mb-6 border border-orange-500/30 group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                    <path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-3 group-hover:text-orange-500 transition-colors">Memory Scanning</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Advanced memory scanning technology that detects cheats by analyzing game processes in real-time.
+                            </p>
+                            <ul class="space-y-2 text-gray-400 text-sm">
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Real-time process monitoring
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Signature-based detection
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Behavioral analysis
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl opacity-0 group-hover:opacity-20 blur transition-all duration-500"></div>
+                    <div class="relative bg-black/80 backdrop-blur-xl border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-orange-500/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="relative">
+                            <div class="w-14 h-14 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl flex items-center justify-center mb-6 border border-orange-500/30 group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                    <path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-3 group-hover:text-orange-500 transition-colors">Hardware Detection</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Comprehensive hardware scanning that identifies cheating devices including DMA tools and custom hardware.
+                            </p>
+                            <ul class="space-y-2 text-gray-400 text-sm">
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    DMA device detection
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    USB device monitoring
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    PCI device scanning
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl opacity-0 group-hover:opacity-20 blur transition-all duration-500"></div>
+                    <div class="relative bg-black/80 backdrop-blur-xl border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-orange-500/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="relative">
+                            <div class="w-14 h-14 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl flex items-center justify-center mb-6 border border-orange-500/30 group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                    <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-3 group-hover:text-orange-500 transition-colors">Cloud Intelligence</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Leverage our cloud-based intelligence network to stay ahead of emerging cheat methods.
+                            </p>
+                            <ul class="space-y-2 text-gray-400 text-sm">
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Real-time threat database
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Community-driven updates
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    AI-powered pattern recognition
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl opacity-0 group-hover:opacity-20 blur transition-all duration-500"></div>
+                    <div class="relative bg-black/80 backdrop-blur-xl border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-orange-500/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="relative">
+                            <div class="w-14 h-14 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl flex items-center justify-center mb-6 border border-orange-500/30 group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                    <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-3 group-hover:text-orange-500 transition-colors">Forensic Analysis</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Deep forensic analysis tools that uncover traces of cheating even after the fact.
+                            </p>
+                            <ul class="space-y-2 text-gray-400 text-sm">
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Prefetch file analysis
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Registry scanning
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Event log analysis
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl opacity-0 group-hover:opacity-20 blur transition-all duration-500"></div>
+                    <div class="relative bg-black/80 backdrop-blur-xl border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-orange-500/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="relative">
+                            <div class="w-14 h-14 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl flex items-center justify-center mb-6 border border-orange-500/30 group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                    <path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-3 group-hover:text-orange-500 transition-colors">Custom Detection</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Create custom detection rules tailored to your specific game or community needs.
+                            </p>
+                            <ul class="space-y-2 text-gray-400 text-sm">
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    YARA rule creation
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Behavior pattern matching
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Signature customization
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group relative">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl opacity-0 group-hover:opacity-20 blur transition-all duration-500"></div>
+                    <div class="relative bg-black/80 backdrop-blur-xl border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/50 transition-all duration-300 h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-orange-500/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="relative">
+                            <div class="w-14 h-14 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl flex items-center justify-center mb-6 border border-orange-500/30 group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-3 group-hover:text-orange-500 transition-colors">Analytics Dashboard</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Comprehensive analytics and reporting tools to monitor your community's security status.
+                            </p>
+                            <ul class="space-y-2 text-gray-400 text-sm">
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Real-time threat monitoring
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Detailed reporting
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                        <path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+                                    </svg>
+                                    Customizable alerts
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Technical Specifications -->
+            <div class="relative bg-black/80 backdrop-blur-xl border border-orange-500/20 rounded-3xl p-12 text-center overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+                <h2 class="text-3xl font-black mb-6 text-white">Technical Specifications</h2>
+                <p class="text-gray-300 mb-8 max-w-3xl mx-auto">
+                    Our anti-cheat system is built with the latest technologies to ensure maximum performance and detection accuracy.
+                </p>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="bg-gradient-to-br from-orange-500/10 to-transparent rounded-2xl p-6 border border-orange-500/20">
+                        <div class="text-4xl font-black gradient-text mb-2">10K+</div>
+                        <div class="text-sm text-gray-400">Detection Signatures</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-500/10 to-transparent rounded-2xl p-6 border border-orange-500/20">
+                        <div class="text-4xl font-black gradient-text mb-2">&lt;5%</div>
+                        <div class="text-sm text-gray-400">System Overhead</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-500/10 to-transparent rounded-2xl p-6 border border-orange-500/20">
+                        <div class="text-4xl font-black gradient-text mb-2">24/7</div>
+                        <div class="text-sm text-gray-400">Real-time Monitoring</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-500/10 to-transparent rounded-2xl p-6 border border-orange-500/20">
+                        <div class="text-4xl font-black gradient-text mb-2">99.9%</div>
+                        <div class="text-sm text-gray-400">Detection Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative bg-black border-t border-orange-500/10 py-16 z-10 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-72 h-72 bg-orange-500/30 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-10 right-10 w-72 h-72 bg-red-500/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-1">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img alt="Prime Logo" class="h-10 w-auto" src="/images/logo.png"/>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-4">
+                        Advanced anti-cheat protection for gaming communities.
+                    </p>
+                    <a class="inline-flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-orange-500/10 to-transparent border border-orange-500/20 rounded-lg hover:border-orange-500/50 transition-all group" href="https://www.dmca.com/Protection/Status.aspx?ID=10e95297-9219-450a-a75d-c0f41cf75437&amp;refurl=https://www.prime.ac/" rel="noopener" target="_blank">
+                        <svg class="w-5 h-5 text-orange-500 group-hover:scale-110 transition-transform" fill="currentColor" viewbox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"></path>
+                        </svg>
+                        <span class="text-xs font-semibold text-gray-400 group-hover:text-orange-500 transition-colors">DMCA Protected</span>
+                    </a>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4 flex items-center">
+                        <div class="w-1 h-4 bg-orange-500 rounded-full mr-2"></div>
+                        Product
+                    </h4>
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-orange-500 transition-colors" href="/features.html">Features</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-orange-500 transition-colors" href="/pricing.html">Pricing</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-orange-500 transition-colors" href="/changelogs.html">Changelogs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4 flex items-center">
+                        <div class="w-1 h-4 bg-orange-500 rounded-full mr-2"></div>
+                        Legal
+                    </h4>
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-orange-500 transition-colors" href="/terms.html">Terms of Service</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-orange-500 transition-colors" href="/privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4 flex items-center">
+                        <div class="w-1 h-4 bg-orange-500 rounded-full mr-2"></div>
+                        Community
+                    </h4>
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-orange-500 transition-colors" href="https://discord.com/invite/primeac">Discord</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-orange-500 transition-colors" href="/contact.html">Support</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-orange-500 transition-colors" href="https://prime.gitbook.io/prime-docs">Documentation</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="relative mb-8">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-orange-500/10"></div>
+                </div>
+                <div class="relative flex justify-center">
+                    <span class="px-4 bg-black text-orange-500 text-xl">🔥</span>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-500 text-sm">
+                    © 2025 Prime.ac - All rights reserved
+                </p>
+                <div class="flex items-center gap-3">
+                    <a class="group relative w-10 h-10 bg-black/60 border border-orange-500/20 rounded-lg flex items-center justify-center hover:border-orange-500/50 hover:scale-110 transition-all" href="https://discord.com/invite/primeac">
+                        <svg class="w-5 h-5 text-gray-400 group-hover:text-orange-500 transition-colors" fill="currentColor" viewbox="0 0 24 24">
+                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

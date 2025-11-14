@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Wrapper script that sets permissions and runs start.sh
+# This file should have execute permissions set by Pterodactyl
+
+cd "$(dirname "$0")" || exit 1
+
+# Set execute permissions on start.sh if it exists
+if [ -f start.sh ]; then
+    chmod +x start.sh 2>/dev/null || true
+    # Try to execute start.sh, fallback to bash if permissions still fail
+    if [ -x start.sh ]; then
+        exec ./start.sh
+    else
+        exec bash start.sh
+    fi
+else
+    # If start.sh doesn't exist, run node directly
+    echo "⚠️  start.sh not found, running node directly..."
+    exec node index.js
+fi
+

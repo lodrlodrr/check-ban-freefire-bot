@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <base href="https://primeblacklist.vercel.app"/>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dashboard | Prime.ac</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+            }
+        }
+
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes bob {
+            0%, 100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+
+        .bob {
+            animation: bob 3s ease-in-out infinite;
+        }
+
+        .flicker {
+            animation: flicker 3s ease-in-out infinite;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-item {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .bg-pattern {
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            transform: translateY(-5px);
+        }
+
+        .icon-container {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* === Scrollbar styling === */
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: #0a0a0a;
+          border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #1E90FF, #00BFFF);
+          border-radius: 10px;
+          box-shadow: 0 0 10px #1E90FF;
+          transition: all 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, #339CFF, #1E90FF);
+          box-shadow: 0 0 20px #1E90FF;
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-x-hidden">
+    <!-- Animated Background Elements -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute top-10 left-10 w-4 h-4 bg-blue-500 rounded-full opacity-20 animate-pulse"></div>
+        <div class="absolute top-60 right-20 w-8 h-8 bg-blue-400 rounded-full opacity-10 animate-float"></div>
+        <div class="absolute bottom-40 left-1/4 w-6 h-6 bg-blue-600 rounded-full opacity-15 animate-bob"></div>
+        <div class="absolute top-1/3 right-1/3 w-3 h-3 bg-blue-300 rounded-full opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-5 h-5 bg-blue-500 rounded-full opacity-10 animate-float"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-zinc-800/50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <img alt="Prime Logo" class="h-12 w-auto hover:scale-105 transition-transform duration-300" src="/static/images/logo.png"/>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/">Home</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/features.html">Features</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/pricing.html">Pricing</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="https://prime.gitbook.io/prime-docs">Guide</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/contact.html">Contact</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="https://discord.com/invite/primeac">Discord</a>
+                </div>
+                <a class="inline-block" href="/logout">
+                    <button class="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
+                        Logout
+                    </button>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center bg-black pt-24 pb-32 overflow-hidden">
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-20 left-20 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-blue-700/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+        </div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+        <div class="relative max-w-7xl mx-auto px-6 z-10 w-full">
+            <div class="text-center mb-14">
+                <div class="inline-flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-blue-500/10 via-blue-500/5 to-transparent border border-blue-500/20 rounded-full mb-6 backdrop-blur-xl">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-blue-500 rounded-full blur-md opacity-50 animate-pulse"></div>
+                        <span class="relative text-xl">🔒</span>
+                    </div>
+                    <span class="text-blue-500 text-xs font-bold tracking-wider">DASHBOARD</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black mb-5 leading-tight">
+                    <span class="gradient-blue">Welcome to Your</span>
+                    <span class="gradient-lightblue ml-3">Dashboard</span>
+                </h1>
+                <style>
+                    .gradient-blue {
+                        background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
+                        background-size: 200% 200%;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        animation: gradient-shift 3s ease infinite;
+                    }
+
+                    .gradient-lightblue {
+                        background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+                        background-size: 200% 200%;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        animation: gradient-shift 3s ease infinite;
+                    }
+
+                    @keyframes gradient-shift {
+                        0%, 100% { background-position: 0% 50%; }
+                        50% { background-position: 100% 50%; }
+                    }
+                </style>
+                <p class="text-base md:text-lg text-gray-300 mb-10 max-w-2xl mx-auto">
+                    Manage your anti-cheat protection and monitor your community.
+                </p>
+            </div>
+            
+            <!-- User Profile Section -->
+            <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-8 mb-8">
+                <h2 class="text-2xl font-black text-white mb-6">Account Information</h2>
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <img id="user-avatar" class="w-24 h-24 rounded-full border-4 border-blue-500/30" src="/static/images/logo.png" alt="User Avatar">
+                    </div>
+                    <div class="flex-grow text-center md:text-left">
+                        <h3 id="user-username" class="text-2xl font-bold text-white">Loading...</h3>
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-2">
+                            <div class="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                                <span class="text-blue-400 text-sm font-medium">ID:</span>
+                                <span id="user-id" class="text-white text-sm ml-1">Loading...</span>
+                            </div>
+                            <div id="account-status" class="bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
+                                <span class="text-green-400 text-sm font-medium">Status:</span>
+                                <span class="text-white text-sm ml-1">Active</span>
+                            </div>
+                            <div id="ban-status" class="bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
+                                <span class="text-green-400 text-sm font-medium">Ban Status:</span>
+                                <span class="text-white text-sm ml-1">Not Banned</span>
+                            </div>
+                        </div>
+                        <p id="user-discriminator" class="text-gray-400 mt-2">#0000</p>
+                        <div class="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
+                            <button id="refresh-token-btn" class="px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg text-sm hover:bg-blue-600/30 transition-colors">
+                                Refresh Tokens
+                            </button>
+                            <button id="check-ban-btn" class="px-4 py-2 bg-purple-600/20 text-purple-400 rounded-lg text-sm hover:bg-purple-600/30 transition-colors">
+                                Check Ban Status
+                            </button>
+                            <button id="view-profile-btn" class="px-4 py-2 bg-indigo-600/20 text-indigo-400 rounded-lg text-sm hover:bg-indigo-600/30 transition-colors">
+                                View Full Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional User Details -->
+                <div id="user-details" class="mt-6 p-4 bg-black/40 rounded-xl border border-blue-500/10 hidden">
+                    <h4 class="text-lg font-bold text-white mb-3">Detailed Information</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">Account Created</p>
+                            <p id="account-created" class="text-white">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Last Login</p>
+                            <p id="last-login" class="text-white">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Permissions</p>
+                            <p id="user-permissions" class="text-white">User</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Servers Managed</p>
+                            <p id="servers-managed" class="text-white">0</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Ban Details Section -->
+                    <div id="ban-details" class="mt-4 p-4 bg-red-500/10 rounded-lg border border-red-500/20 hidden">
+                        <h4 class="text-lg font-bold text-red-400 mb-2">Ban Information</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-400 text-sm">Ban Reason</p>
+                                <p id="ban-reason" class="text-white">No reason provided</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400 text-sm">Ban Date</p>
+                                <p id="ban-date" class="text-white">N/A</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats Section -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white">Total Bans</h3>
+                        <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-black text-blue-500" id="total-bans">0</div>
+                    <div class="text-sm text-gray-400 mt-2">Active bans in your community</div>
+                </div>
+                
+                <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white">Permanent Bans</h3>
+                        <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-black text-blue-500" id="permanent-bans">0</div>
+                    <div class="text-sm text-gray-400 mt-2">Permanent bans issued</div>
+                </div>
+                
+                <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white">Last 24 Hours</h3>
+                        <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-black text-blue-500" id="recent-bans">0</div>
+                    <div class="text-sm text-gray-400 mt-2">Bans issued today</div>
+                </div>
+                
+                <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white">Active Sessions</h3>
+                        <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-black text-blue-500" id="active-sessions">1</div>
+                    <div class="text-sm text-gray-400 mt-2">Current active sessions</div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-blue-500/10 to-blue-700/10 backdrop-blur-xl border border-blue-500/20 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-2">Security Check</h3>
+                            <p class="text-gray-400 text-sm mb-4">Run a comprehensive security scan on your servers</p>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                                Run Scan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-500/10 to-purple-700/10 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 hover:border-purple-500/50 transition-all duration-300">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-2">Settings</h3>
+                            <p class="text-gray-400 text-sm mb-4">Configure your anti-cheat detection settings</p>
+                            <button class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+                                Configure
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-500/10 to-green-700/10 backdrop-blur-xl border border-green-500/20 rounded-2xl p-6 hover:border-green-500/50 transition-all duration-300">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-2">Reports</h3>
+                            <p class="text-gray-400 text-sm mb-4">View detailed analytics and reports</p>
+                            <button class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                                View Reports
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add User to Blacklist Form -->
+            <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-8 mb-8">
+                <h2 class="text-2xl font-black text-white mb-6">Add User to Blacklist</h2>
+                <form id="blacklist-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">User ID</label>
+                            <input type="text" id="user-id-input" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Discord User ID" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                            <input type="text" id="username" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Username" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Reason</label>
+                        <textarea id="reason" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter reason for blacklist" rows="3"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Server</label>
+                            <input type="text" id="server" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter server name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Ban Type</label>
+                            <select id="ban-type" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="permanent">Permanent</option>
+                                <option value="temporary">Temporary</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="temp-ban-options" class="hidden">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Expiration Date</label>
+                        <input type="datetime-local" id="ban-expiration" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
+                            Add to Blacklist
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-black text-white">Recent Activity</h2>
+                    <button id="refresh-activity" class="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-lg text-sm hover:bg-blue-600/30 transition-colors">
+                        Refresh
+                    </button>
+                </div>
+                <div id="activity-log" class="space-y-4">
+                    <div class="text-gray-400 text-center py-8">No activity found</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative bg-black border-t border-blue-500/10 py-16 z-10 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-72 h-72 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-10 right-10 w-72 h-72 bg-blue-700/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center space-y-6 md:space-y-0 md:space-x-8">
+                <div class="flex-shrink-0">
+                    <img src="/static/images/logo.png" alt="Prime.ac Logo" class="w-10 h-10">
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/changelogs">Changelogs</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/blog">Blog</a></li>
+                    </ul>
+                    
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/terms">Terms of Service</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/privacy">Privacy Policy</a></li>
+                    </ul>
+                    
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/contact">Contact</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/support">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-6 mt-6 border-t border-zinc-800 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-3">
+                    <a class="inline-flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-blue-500/10 to-transparent border border-blue-500/20 rounded-lg hover:border-blue-500/50 hover:scale-105 transition-all group" href="https://www.dmca.com/Protection/Status.aspx?ID=10e95297-9219-450a-a75d-c0f41cf75437&amp;refurl=https://www.prime.ac/" rel="noopener" target="_blank">
+                        <svg class="w-5 h-5 text-blue-500 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 11 5.16-1.261 9-5.45 9-11V7l-10-5z"/>
+                        </svg>
+                        <span class="text-sm font-medium text-blue-500">DMCA Protected</span>
+                    </a>
+                </div>
+                
+                <p class="text-xs text-gray-500 text-center md:text-right">
+                    &copy; 2023 - 2025 Prime.ac. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Check authentication status and load user data
+        fetch('/api/auth/check')
+            .then(response => response.json())
+            .then(data => {
+                if (!data.authenticated) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                // Populate user information
+                const user = data.user;
+                document.getElementById('user-username').textContent = user.username || 'Unknown User';
+                document.getElementById('user-id').textContent = user.id || 'N/A';
+                document.getElementById('user-discriminator').textContent = user.discriminator ? `#${user.discriminator}` : '#0000';
+                
+                // Set user avatar
+                if (user.avatar) {
+                    const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+                    document.getElementById('user-avatar').src = avatarUrl;
+                }
+                
+                // Set account creation and last login dates
+                document.getElementById('account-created').textContent = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : new Date().toLocaleDateString();
+                document.getElementById('last-login').textContent = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Just now';
+                
+                // Set permissions
+                document.getElementById('user-permissions').textContent = user.permissions || 'User';
+                
+                // Set servers managed
+                document.getElementById('servers-managed').textContent = user.serversManaged || '0';
+                
+                // Check if user is banned
+                checkBanStatus(user.id);
+                
+                // Set account status
+                const accountStatus = document.getElementById('account-status');
+                if (user.verified) {
+                    accountStatus.className = 'bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20';
+                    accountStatus.innerHTML = '<span class="text-green-400 text-sm font-medium">Status:</span> <span class="text-white text-sm ml-1">Verified</span>';
+                } else {
+                    accountStatus.className = 'bg-yellow-500/10 px-3 py-1 rounded-full border border-yellow-500/20';
+                    accountStatus.innerHTML = '<span class="text-yellow-400 text-sm font-medium">Status:</span> <span class="text-white text-sm ml-1">Unverified</span>';
+                }
+            })
+            .catch(error => {
+                console.error('Error checking authentication:', error);
+            });
+
+        // Check ban status function
+        function checkBanStatus(userId) {
+            fetch(`/api/blacklist/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const banStatus = document.getElementById('ban-status');
+                    if (data.success && data.data) {
+                        // User is banned
+                        banStatus.className = 'bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20';
+                        banStatus.innerHTML = '<span class="text-red-400 text-sm font-medium">Ban Status:</span> <span class="text-white text-sm ml-1">Banned</span>';
+                        
+                        // Show ban details if available
+                        const banData = data.data;
+                        if (banData.reason) {
+                            document.getElementById('ban-reason').textContent = banData.reason;
+                            document.getElementById('ban-details').classList.remove('hidden');
+                        }
+                        if (banData.date) {
+                            document.getElementById('ban-date').textContent = new Date(banData.date).toLocaleString();
+                        }
+                    } else {
+                        // User is not banned
+                        banStatus.className = 'bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20';
+                        banStatus.innerHTML = '<span class="text-green-400 text-sm font-medium">Ban Status:</span> <span class="text-white text-sm ml-1">Not Banned</span>';
+                        document.getElementById('ban-details').classList.add('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking ban status:', error);
+                });
+        }
+
+        // Fetch stats
+        fetch('/api/stats')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('total-bans').textContent = data.data.total || 0;
+                    document.getElementById('permanent-bans').textContent = data.data.permanent || 0;
+                    document.getElementById('recent-bans').textContent = data.data.recent || 0;
+                    document.getElementById('active-sessions').textContent = data.data.sessions || 1;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching stats:', error);
+            });
+
+        // Fetch recent activity
+        function fetchActivity() {
+            fetch('/api/activity')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const activityLog = document.getElementById('activity-log');
+                        if (data.activities && data.activities.length > 0) {
+                            activityLog.innerHTML = data.activities.map(activity => `
+                                <div class="flex items-start space-x-4 p-4 bg-black/40 rounded-lg border border-blue-500/10">
+                                    <div class="flex-shrink-0 w-3 h-3 bg-blue-500 rounded-full mt-2"></div>
+                                    <div>
+                                        <p class="text-white text-sm">${activity.message}</p>
+                                        <p class="text-gray-500 text-xs mt-1">${new Date(activity.timestamp).toLocaleString()}</p>
+                                    </div>
+                                </div>
+                            `).join('');
+                        } else {
+                            activityLog.innerHTML = '<div class="text-gray-400 text-center py-8">No activity found</div>';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching activity:', error);
+                    document.getElementById('activity-log').innerHTML = '<div class="text-red-400 text-center py-8">Error loading activity</div>';
+                });
+        }
+
+        // Initial activity fetch
+        fetchActivity();
+
+        // Handle form submission
+        document.getElementById('blacklist-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('user-id-input').value;
+            const username = document.getElementById('username').value;
+            const reason = document.getElementById('reason').value;
+            const server = document.getElementById('server').value;
+            const banType = document.getElementById('ban-type').value;
+            const banExpiration = document.getElementById('ban-expiration').value;
+            
+            const requestData = {
+                userId: userId,
+                username: username,
+                reason: reason,
+                server: server
+            };
+            
+            // Add expiration date if temporary ban
+            if (banType === 'temporary' && banExpiration) {
+                requestData.expiresAt = new Date(banExpiration).toISOString();
+            }
+            
+            fetch('/api/blacklist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('User added to blacklist successfully!');
+                    document.getElementById('blacklist-form').reset();
+                    // Refresh stats and activity
+                    location.reload();
+                } else {
+                    alert('Error adding user to blacklist: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error adding user to blacklist: ' + error.message);
+            });
+        });
+
+        // Refresh token button
+        document.getElementById('refresh-token-btn').addEventListener('click', function() {
+            alert('Token refresh functionality would be implemented here.');
+        });
+
+        // Check ban status button
+        document.getElementById('check-ban-btn').addEventListener('click', function() {
+            // Get user ID from the displayed information
+            const userId = document.getElementById('user-id').textContent;
+            if (userId && userId !== 'Loading...') {
+                checkBanStatus(userId);
+                alert('Ban status checked and updated.');
+            }
+        });
+
+        // View profile button
+        document.getElementById('view-profile-btn').addEventListener('click', function() {
+            const userDetails = document.getElementById('user-details');
+            userDetails.classList.toggle('hidden');
+        });
+
+        // Ban type change handler
+        document.getElementById('ban-type').addEventListener('change', function() {
+            const tempOptions = document.getElementById('temp-ban-options');
+            if (this.value === 'temporary') {
+                tempOptions.classList.remove('hidden');
+            } else {
+                tempOptions.classList.add('hidden');
+            }
+        });
+
+        // Refresh activity button
+        document.getElementById('refresh-activity').addEventListener('click', function() {
+            fetchActivity();
+        });
+
+        // Quick action buttons
+        document.querySelectorAll('.quick-action-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.getAttribute('data-action');
+                alert(`Performing action: ${action}`);
+            });
+        });
+    </script>
+</body>
+</html>

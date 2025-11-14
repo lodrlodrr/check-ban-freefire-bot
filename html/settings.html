@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <base href="https://primeblacklist.vercel.app"/>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Settings | Prime.ac</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+            }
+        }
+
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes bob {
+            0%, 100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+
+        .bob {
+            animation: bob 3s ease-in-out infinite;
+        }
+
+        .flicker {
+            animation: flicker 3s ease-in-out infinite;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-item {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .bg-pattern {
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            transform: translateY(-5px);
+        }
+
+        .icon-container {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* === Scrollbar styling === */
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: #0a0a0a;
+          border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #1E90FF, #00BFFF);
+          border-radius: 10px;
+          box-shadow: 0 0 10px #1E90FF;
+          transition: all 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, #339CFF, #1E90FF);
+          box-shadow: 0 0 20px #1E90FF;
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-x-hidden">
+    <!-- Animated Background Elements -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute top-10 left-10 w-4 h-4 bg-blue-500 rounded-full opacity-20 animate-pulse"></div>
+        <div class="absolute top-60 right-20 w-8 h-8 bg-blue-400 rounded-full opacity-10 animate-float"></div>
+        <div class="absolute bottom-40 left-1/4 w-6 h-6 bg-blue-600 rounded-full opacity-15 animate-bob"></div>
+        <div class="absolute top-1/3 right-1/3 w-3 h-3 bg-blue-300 rounded-full opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-5 h-5 bg-blue-500 rounded-full opacity-10 animate-float"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-zinc-800/50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <img alt="Prime Logo" class="h-12 w-auto hover:scale-105 transition-transform duration-300" src="/static/images/logo.png"/>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/">Home</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/features.html">Features</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/checkuser.html">Checkuser</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/Banned.html">Banned</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="https://prime.gitbook.io/prime-docs">Guide</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="/contact.html">Contact</a>
+                    <a class="nav-item text-sm font-medium text-zinc-400 hover:text-white transition-colors" href="https://discord.com/invite/primeac">Discord</a>
+                </div>
+                <a class="inline-block" href="/logout">
+                    <button class="px-6 py-2 bg-gradient-to-r from-red-600 to-red-500 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300">
+                        Logout
+                    </button>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Settings Section -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center bg-black pt-24 pb-32 overflow-hidden">
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-20 left-20 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-blue-700/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+        </div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+        <div class="relative max-w-7xl mx-auto px-6 z-10 w-full">
+            <div class="text-center mb-14">
+                <div class="inline-flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-blue-500/10 via-blue-500/5 to-transparent border border-blue-500/20 rounded-full mb-6 backdrop-blur-xl">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-blue-500 rounded-full blur-md opacity-50 animate-pulse"></div>
+                        <span class="relative text-xl">⚙️</span>
+                    </div>
+                    <span class="text-blue-500 text-xs font-bold tracking-wider">SETTINGS</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black mb-5 leading-tight">
+                    <span class="gradient-blue">Account</span>
+                    <span class="gradient-lightblue ml-3">Settings</span>
+                </h1>
+                <style>
+                    .gradient-blue {
+                        background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
+                        background-size: 200% 200%;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        animation: gradient-shift 3s ease infinite;
+                    }
+
+                    .gradient-lightblue {
+                        background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+                        background-size: 200% 200%;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        animation: gradient-shift 3s ease infinite;
+                    }
+
+                    @keyframes gradient-shift {
+                        0%, 100% { background-position: 0% 50%; }
+                        50% { background-position: 100% 50%; }
+                    }
+                </style>
+                <p class="text-base md:text-lg text-gray-300 mb-10 max-w-2xl mx-auto">
+                    Manage your account preferences and security settings.
+                </p>
+            </div>
+            
+            <!-- Settings Content -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Sidebar Navigation -->
+                <div class="lg:col-span-1">
+                    <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-6">
+                        <h2 class="text-xl font-bold text-white mb-6">Settings Menu</h2>
+                        <nav class="space-y-2">
+                            <a href="#profile" class="block px-4 py-3 bg-blue-500/10 rounded-lg text-white font-medium border border-blue-500/30">Profile Settings</a>
+                            <a href="#security" class="block px-4 py-3 text-gray-400 hover:bg-blue-500/5 hover:text-white rounded-lg transition-colors">Security</a>
+                            <a href="#notifications" class="block px-4 py-3 text-gray-400 hover:bg-blue-500/5 hover:text-white rounded-lg transition-colors">Notifications</a>
+                            <a href="#privacy" class="block px-4 py-3 text-gray-400 hover:bg-blue-500/5 hover:text-white rounded-lg transition-colors">Privacy</a>
+                            <a href="#integrations" class="block px-4 py-3 text-gray-400 hover:bg-blue-500/5 hover:text-white rounded-lg transition-colors">Integrations</a>
+                            <a href="#billing" class="block px-4 py-3 text-gray-400 hover:bg-blue-500/5 hover:text-white rounded-lg transition-colors">Billing</a>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="lg:col-span-2">
+                    <!-- Profile Settings -->
+                    <div id="profile" class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-8 mb-8">
+                        <h2 class="text-2xl font-black text-white mb-6">Profile Settings</h2>
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8">
+                            <div class="flex-shrink-0">
+                                <img id="user-avatar" class="w-24 h-24 rounded-full border-4 border-blue-500/30" src="/static/images/logo.png" alt="User Avatar">
+                                <button class="mt-3 w-full px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg text-sm hover:bg-blue-600/30 transition-colors">
+                                    Change Avatar
+                                </button>
+                            </div>
+                            <div class="flex-grow">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">Username</label>
+                                        <input type="text" id="username" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter username" readonly>
+                                        <p class="text-gray-500 text-xs mt-1">Cannot be changed (Discord integration)</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                                        <input type="email" id="email" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter email" readonly>
+                                        <p class="text-gray-500 text-xs mt-1">Cannot be changed (Discord integration)</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">Display Name</label>
+                                        <input type="text" id="display-name" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter display name" readonly>
+                                        <p class="text-gray-500 text-xs mt-1">Cannot be changed (Discord integration)</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">Timezone</label>
+                                        <select id="timezone" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                            <option value="UTC">UTC</option>
+                                            <option value="EST">EST</option>
+                                            <option value="PST">PST</option>
+                                            <option value="CET">CET</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Ban Status Section -->
+                                <div class="mt-6 p-4 bg-red-500/10 rounded-lg border border-red-500/20" id="ban-status-section">
+                                    <h3 class="text-lg font-bold text-red-400 mb-2">Account Ban Status</h3>
+                                    <div class="flex items-center">
+                                        <div id="ban-status-indicator" class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                                        <span id="ban-status-text" class="text-white">Not Banned</span>
+                                    </div>
+                                    <div id="ban-details" class="mt-2 hidden">
+                                        <p class="text-gray-400 text-sm">Ban Reason: <span id="ban-reason" class="text-white">None</span></p>
+                                        <p class="text-gray-400 text-sm">Ban Date: <span id="ban-date" class="text-white">N/A</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Account Information -->
+                    <div class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-8 mb-8">
+                        <h2 class="text-2xl font-black text-white mb-6">Account Information</h2>
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+                            <div class="flex-shrink-0">
+                                <img id="user-avatar-info" class="w-24 h-24 rounded-full border-4 border-blue-500/30" src="/static/images/logo.png" alt="User Avatar">
+                            </div>
+                            <div class="flex-grow text-center md:text-left">
+                                <h3 id="user-username-info" class="text-2xl font-bold text-white">Loading...</h3>
+                                <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-2">
+                                    <div class="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                                        <span class="text-blue-400 text-sm font-medium">ID:</span>
+                                        <span id="user-id-info" class="text-white text-sm ml-1">Loading...</span>
+                                    </div>
+                                    <div id="account-status-info" class="bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
+                                        <span class="text-green-400 text-sm font-medium">Status:</span>
+                                        <span class="text-white text-sm ml-1">Active</span>
+                                    </div>
+                                    <div id="ban-status-info" class="bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
+                                        <span class="text-green-400 text-sm font-medium">Ban Status:</span>
+                                        <span class="text-white text-sm ml-1">Not Banned</span>
+                                    </div>
+                                </div>
+                                <p id="user-discriminator-info" class="text-gray-400 mt-2">#0000</p>
+                                <div class="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
+                                    <button id="refresh-token-btn-info" class="px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg text-sm hover:bg-blue-600/30 transition-colors">
+                                        Refresh Tokens
+                                    </button>
+                                    <button id="check-ban-btn-info" class="px-4 py-2 bg-purple-600/20 text-purple-400 rounded-lg text-sm hover:bg-purple-600/30 transition-colors">
+                                        Check Ban Status
+                                    </button>
+                                    <button id="view-profile-btn-info" class="px-4 py-2 bg-indigo-600/20 text-indigo-400 rounded-lg text-sm hover:bg-indigo-600/30 transition-colors">
+                                        View Full Profile
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Additional User Details -->
+                        <div id="user-details-info" class="mt-6 p-4 bg-black/40 rounded-xl border border-blue-500/10 hidden">
+                            <h4 class="text-lg font-bold text-white mb-3">Detailed Information</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-gray-400 text-sm">Account Created</p>
+                                    <p id="account-created-info" class="text-white">Loading...</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Last Login</p>
+                                    <p id="last-login-info" class="text-white">Loading...</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Permissions</p>
+                                    <p id="user-permissions-info" class="text-white">User</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Servers Managed</p>
+                                    <p id="servers-managed-info" class="text-white">0</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Ban Details Section -->
+                            <div id="ban-details-info" class="mt-4 p-4 bg-red-500/10 rounded-lg border border-red-500/20 hidden">
+                                <h4 class="text-lg font-bold text-red-400 mb-2">Ban Information</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-gray-400 text-sm">Ban Reason</p>
+                                        <p id="ban-reason-info" class="text-white">No reason provided</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-sm">Ban Date</p>
+                                        <p id="ban-date-info" class="text-white">N/A</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Settings -->
+                    <div id="security" class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-8 mb-8">
+                        <h2 class="text-2xl font-black text-white mb-6">Security</h2>
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-lg font-bold text-white mb-3">Password</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">Current Password</label>
+                                        <input type="password" id="current-password" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter current password">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">New Password</label>
+                                        <input type="password" id="new-password" class="w-full bg-black/60 border border-blue-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter new password">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-bold text-white mb-3">Two-Factor Authentication</h3>
+                                <div class="flex items-center justify-between p-4 bg-black/40 rounded-lg border border-blue-500/10">
+                                    <div>
+                                        <p class="text-white font-medium">Enable 2FA</p>
+                                        <p class="text-gray-400 text-sm">Add an extra layer of security to your account</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-bold text-white mb-3">Active Sessions</h3>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-4 bg-black/40 rounded-lg border border-blue-500/10">
+                                        <div>
+                                            <p class="text-white font-medium">Windows 11 • Chrome</p>
+                                            <p class="text-gray-400 text-sm">Current session</p>
+                                        </div>
+                                        <span class="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-xs">Active</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-black/40 rounded-lg border border-blue-500/10">
+                                        <div>
+                                            <p class="text-white font-medium">macOS • Safari</p>
+                                            <p class="text-gray-400 text-sm">Last seen: 2 hours ago</p>
+                                        </div>
+                                        <button class="px-3 py-1 bg-red-500/10 text-red-400 rounded-lg text-sm hover:bg-red-500/20 transition-colors">
+                                            Revoke
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-6">
+                            <button class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
+                                Update Security Settings
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Settings -->
+                    <div id="notifications" class="bg-black/80 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-8">
+                        <h2 class="text-2xl font-black text-white mb-6">Notification Preferences</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-black/40 rounded-lg border border-blue-500/10">
+                                <div>
+                                    <p class="text-white font-medium">Email Notifications</p>
+                                    <p class="text-gray-400 text-sm">Receive email updates about your account</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-black/40 rounded-lg border border-blue-500/10">
+                                <div>
+                                    <p class="text-white font-medium">Security Alerts</p>
+                                    <p class="text-gray-400 text-sm">Get notified about security events</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-black/40 rounded-lg border border-blue-500/10">
+                                <div>
+                                    <p class="text-white font-medium">Ban Notifications</p>
+                                    <p class="text-gray-400 text-sm">Receive alerts when users are banned</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-black/40 rounded-lg border border-blue-500/10">
+                                <div>
+                                    <p class="text-white font-medium">Newsletter</p>
+                                    <p class="text-gray-400 text-sm">Receive updates about new features</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative bg-black border-t border-blue-500/10 py-16 z-10 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-72 h-72 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-10 right-10 w-72 h-72 bg-blue-700/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center space-y-6 md:space-y-0 md:space-x-8">
+                <div class="flex-shrink-0">
+                    <img src="/static/images/logo.png" alt="Prime.ac Logo" class="w-10 h-10">
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/changelogs">Changelogs</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/blog">Blog</a></li>
+                    </ul>
+                    
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/terms">Terms of Service</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/privacy">Privacy Policy</a></li>
+                    </ul>
+                    
+                    <ul class="space-y-2">
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/contact">Contact</a></li>
+                        <li><a class="text-gray-400 text-sm hover:text-blue-500 transition-colors" href="https://primeblacklist.vercel.app/support">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-6 mt-6 border-t border-zinc-800 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-3">
+                    <a class="inline-flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-blue-500/10 to-transparent border border-blue-500/20 rounded-lg hover:border-blue-500/50 hover:scale-105 transition-all group" href="https://www.dmca.com/Protection/Status.aspx?ID=10e95297-9219-450a-a75d-c0f41cf75437&amp;refurl=https://www.prime.ac/" rel="noopener" target="_blank">
+                        <svg class="w-5 h-5 text-blue-500 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 11 5.16-1.261 9-5.45 9-11V7l-10-5z"/>
+                        </svg>
+                        <span class="text-sm font-medium text-blue-500">DMCA Protected</span>
+                    </a>
+                </div>
+                
+                <p class="text-xs text-gray-500 text-center md:text-right">
+                    &copy; 2023 - 2025 Prime.ac. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Check authentication status
+        fetch('/api/auth/check')
+            .then(response => response.json())
+            .then(data => {
+                if (!data.authenticated) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                // Populate user information
+                const user = data.user;
+                document.getElementById('username').value = user.username || '';
+                document.getElementById('email').value = user.email || '';
+                
+                // Set user avatar
+                if (user.avatar) {
+                    const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+                    document.getElementById('user-avatar').src = avatarUrl;
+                }
+                
+                // Check ban status
+                checkBanStatus(user.id);
+            })
+            .catch(error => {
+                console.error('Error checking authentication:', error);
+            });
+            
+        // Check ban status function
+        function checkBanStatus(userId) {
+            fetch(`/api/blacklist/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const banStatusSection = document.getElementById('ban-status-section');
+                    const banStatusIndicator = document.getElementById('ban-status-indicator');
+                    const banStatusText = document.getElementById('ban-status-text');
+                    const banDetails = document.getElementById('ban-details');
+                    const banReason = document.getElementById('ban-reason');
+                    const banDate = document.getElementById('ban-date');
+                    
+                    if (data.success && data.data) {
+                        // User is banned
+                        banStatusIndicator.className = 'w-3 h-3 bg-red-500 rounded-full mr-2';
+                        banStatusText.textContent = 'Banned';
+                        banStatusText.className = 'text-red-400';
+                        
+                        // Show ban details
+                        banDetails.classList.remove('hidden');
+                        banReason.textContent = data.data.reason || 'No reason provided';
+                        banDate.textContent = data.data.date ? new Date(data.data.date).toLocaleString() : 'N/A';
+                    } else {
+                        // User is not banned
+                        banStatusIndicator.className = 'w-3 h-3 bg-green-500 rounded-full mr-2';
+                        banStatusText.textContent = 'Not Banned';
+                        banStatusText.className = 'text-white';
+                        banDetails.classList.add('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking ban status:', error);
+                });
+        }
+    </script>
+</body>
+</html>
